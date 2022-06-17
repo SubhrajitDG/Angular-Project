@@ -10,31 +10,29 @@
     <link href="style.css" rel="stylesheet" />
   </head>
   <body ng-app="Project">
-    <div ng-controller="navBar">
-      <nav class="{{active}}" ng-click="$event.preventDefault()">
-        <a href="#" class="home" ng-click="active='home'">Home</a>
-        <a href="#" class="items" ng-click="active='items'">Items</a>
-        <a href="#" class="search" ng-click="active='search'">Search</a>
-        <a href="#" class="contact" ng-click="active='contact'">Contact</a>
-      </nav>
-      <div ng-show="search">
-        <div class="bar">
-          <input
-            type="text"
-            ng-model="searchString"
-            placeholder="Enter your search terms"
-          />
-        </div>
+    <nav class="{{active}}" ng-click="$event.preventDefault()">
+      <a href="#" class="home" ng-click="active='home'">Home</a>
+      <a href="#" class="items" ng-click="active='items'">Items</a>
+      <a href="#" class="search" ng-click="active='search'">Search</a>
+      <a href="#" class="contact" ng-click="active='contact'">Contact</a>
+    </nav>
 
-        <ul>
-          <li ng-repeat="i in items | searchFor:searchString">
-            <a href="{{i.url}}"><img ng-src="{{i.image}}" /></a>
-            <p>{{i.title}}</p>
-          </li>
-        </ul>
+    <p ng-hide="active">Please click a menu item</p>
+    <div ng-show="active">
+      <div class="bar">
+        <input
+          type="text"
+          ng-model="searchString"
+          placeholder="Enter your search terms"
+        />
       </div>
 
-      <p ng-hide="active">Please click a menu item</p>
+      <ul>
+        <li ng-repeat="i in items | searchFor:searchString">
+          <a href="{{i.url}}"><img ng-src="{{i.image}}" /></a>
+          <p>{{i.title}}</p>
+        </li>
+      </ul>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     <script src="script.js"></script>
