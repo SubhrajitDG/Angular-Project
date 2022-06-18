@@ -1,13 +1,59 @@
-// Define a new module for our app
-var app = angular.module("instantSearch", []);
+function OrderFormController($scope){
 
-// Create the instant search filter
+	// Define the model properties. The view will loop
+	// through the services array and genreate a li
+	// element for every one of its items.
+
+	$scope.services = [
+		{
+			name: 'Web Development',
+			price: 300,
+			active:true
+		},{
+			name: 'Design',
+			price: 400,
+			active:false
+		},{
+			name: 'Integration',
+			price: 250,
+			active:false
+		},{
+			name: 'Training',
+			price: 220,
+			active:false
+		}
+	];
+
+	$scope.toggleActive = function(s){
+		s.active = !s.active;
+	};
+
+	// Helper method for calculating the total price
+
+	$scope.total = function(){
+
+		var total = 0;
+
+		// Use the angular forEach helper method to
+		// loop through the services array:
+
+		angular.forEach($scope.services, function(s){
+			if (s.active){
+				total+= s.price;
+			}
+		});
+
+		return total;
+	};
+}
+
+
+
+//////////////
+var app = angular.module("", []);
+
 
 app.filter('searchFor', function(){
-
-	// All filters must return a function. The first parameter
-	// is the data that is to be filtered, and the second is an
-	// argument that may be passed with a colon (searchFor:searchString)
 
 	return function(arr, searchString){
 
@@ -19,7 +65,6 @@ app.filter('searchFor', function(){
 
 		searchString = searchString.toLowerCase();
 
-		// Using the forEach helper method to loop through the array
 		angular.forEach(arr, function(item){
 
 			if(item.title.toLowerCase().indexOf(searchString) !== -1){
@@ -81,3 +126,5 @@ function InstantSearchController($scope){
 
 
 }
+
+
