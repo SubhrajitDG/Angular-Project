@@ -24,6 +24,9 @@ a:hover{
 section, footer, header, aside, nav{
 	display: block;
 }
+section{
+	margin-top: 100px;
+}
 
 nav{
 	display:inline-block;
@@ -31,6 +34,9 @@ nav{
 	background-color:#4f14e6;
 	box-shadow:0 1px 1px #ccc;
 	border-radius:2px;
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 nav a{
@@ -58,9 +64,9 @@ nav a:last-child{
 }
 
 nav.home .home,
-nav.items .items,
-nav.search .search,
-nav.about .about{
+nav.itemshome .itemshome,
+nav.searchhome .searchhome,
+nav.abouthome .abouthome{
 	background-color:#ec0b52;
 }
 
@@ -92,8 +98,55 @@ a:hover{
 section, footer, header, aside, nav{
 	display: block;
 }
+.grid{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 
+}
+.grid ul{
+	flex-direction: column;
+}
+.grid ul li{
+	width: 200px;
+	min-width: 0;
+	flex-direction: column;
+	align-items: center;
+	height: 80px;
+	justify-content: space-evenly;
+	
+}
 
+.grid div{
+	display: flex;
+	width: 100%;
+	justify-content: center;
+}
+.grid div button{
+	width: 95%;
+}
+
+.heading{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.heading h3 {
+	color: white;
+	font-size:40px;
+}
+.heading button{
+	padding: 10px;
+	background-color: #5c9bb7;
+	box-shadow: 5px 5px 10px #7dcae5;
+	border: none;
+	border-radius: 4px;
+	color: white;
+	font-weight: 500;
+}
+.heading button:active{
+	background-color: #426f83;
+}
 .bar{
 	background-color:#5c9bb7;
 
@@ -107,6 +160,25 @@ section, footer, header, aside, nav{
 	padding: 14px;
 	margin: 80px auto 20px;
 	position:relative;
+}
+
+#input{
+	position: absolute;
+                top: -45px;
+                left: -150px;
+                padding: 10px 100px 10px 5px;
+                background: #fff no-repeat 13px 13px;
+                border: none;
+                line-height: 19px;
+                border: solid 10px #9fd3ea;
+                border-radius: 2px;
+                box-shadow: 0 2px 8px #c4c4c4 inset;
+                text-align: left;
+                font-size: 14px;
+                font-family: inherit;
+                color: #738289;
+                font-weight: bold;
+                outline: none;
 }
 
 .bar input{
@@ -134,12 +206,35 @@ ul{
 	width: 428px;
 	margin: 0 auto;
 	text-align: left;
+	
+}
+#itemul{
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 100%;
+
+}
+ul #editBtn{
+	background-color: #8ec16d;
+	padding: 20px;
+	margin-bottom: 8px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+ul #editBtn:hover{
+	background-color: #abda8d;
 }
 
+
 ul li{
-	border-bottom: 1px solid #ddd;
+	/* border-bottom: 1px solid #ddd; */
 	padding: 10px;
 	overflow: hidden;
+	display: flex;
+	justify-content: space-between;
+	min-width: 350px;
+	border-radius: 4px;
 }
 
 ul li img{
@@ -172,7 +267,7 @@ form{
 	background-color: #61a1bc;
 	border-radius: 2px;
 	box-shadow: 0 1px 1px #ccc;
-	width: 400px;
+	width: 550px;
 	padding: 35px 60px;
 	margin: 80px auto;
 }
