@@ -1,53 +1,201 @@
 <!DOCTYPE html>
+<!--ng-app directive tells AngularJS that myApp
+    is the root element of the application -->
 <html>
   <head>
-    <meta charset="utf-8" />
-    <title>Angular Project</title>
-    <link
-      href="http://fonts.googleapis.com/css?family=Open+Sans:400,700"
-      rel="stylesheet"
-    />
+    <!--import the angularjs libraries-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-route.min.js"></script>
     <link href="style.css" rel="stylesheet" />
   </head>
-  <body ng-app="Project">
-    <nav class="{{active}}" ng-click="$event.preventDefault()">
-      <a href="#" class="home" ng-click="active='home'">Home</a>
-      <a href="#" class="items" ng-click="active='items'">Items</a>
-      <a href="#" class="search" ng-click="active='search'">Search</a>
-      <a href="#" class="contact" ng-click="active='contact'">Contact</a>
+  <body ng-app="myApp">
+    <!--hg-template indicates the pages 
+            that get loaded as per requirement-->
+    <script type="text/ng-template" id="first.html">
+      <h1>Welcome To Dog World,<br/>This is the Home Page</h1>
+      <h3 style="color:green">
+          <br/>Know About Your Dog
+          <a href="#/fourth">Click Here</a><br/>
+           <br/>Choose Your Dog Breed
+           <a href="#/second">Click Here</a>
+      </h3><br/>
+      <h2 style="color: red">Contact us : <br/>Email: DogWorld@contact.in <br/>Mobile: +91 9956735673/7002345876</h2>
+    </script>
+    <script type="text/ng-template" id="second.html">
+      <form ng-controller="InstantSearchController">
+
+          <h1>Items</h1>
+
+          <ul>
+              <!-- Loop through the services array, assign a click handler, and set or
+                  remove the "active" css class if needed -->
+              <li ng-repeat="service in services" ng-click="toggleActive(service)" ng-class="{active:service.active}">
+                  <!-- Notice the use of the currency filter, it will format the price -->
+                  {{service.name}} <span>{{service.price | currency}}</span>
+              </li>
+          </ul>
+
+          <div class="total">
+              <!-- Calculate the total price of all chosen services. Format it as currency. -->
+              Total: <span>{{total() | currency}}</span>
+          </div>
+
+      </form>
+    </script>
+    <script type="text/ng-template" id="third.html">
+      <div ng-app ng-controller="InstantSearchController">
+          <div class="bar">
+              <!-- Create a binding between the searchString model and the text field -->
+              <input type="text" ng-model="searchString" placeholder="Enter your search terms" />
+          </div>
+
+          <ul>
+              <!-- Render a li element for every entry in the items array. Notice
+                   the custom search filter "searchFor". It takes the value of the
+                   searchString model as an argument.
+               -->
+              <li ng-repeat="i in items | searchFor:searchString">
+                  <a href="{{i.url}}"><img ng-src="{{i.image}}" /></a>
+                  <p>{{i.title}}</p>
+              </li>
+          </ul>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="fourth.html">
+      <h1>Know Your Dog Breed</h1>
+      <h2>
+
+      </h2>
+    </script>
+
+    <nav class="{{active}}">
+      <a href="#/" class="home" ng-click="active='home'">Home</a>
+      <a href="#/second" class="items" ng-click="active='items'">Items</a>
+      <a href="#/third" class="search" ng-click="active='search'">Search</a>
+      <a href="#/fourth" class="about" ng-click="active='about'">About</a>
     </nav>
 
-    <p ng-hide="active">Please click a menu item</p>
-    <div ng-show="active">
-      <div class="bar">
-        <input
-          type="text"
-          ng-model="searchString"
-          placeholder="Enter your search terms"
-        />
-      </div>
-
-      <ul>
-        <li ng-repeat="i in items | searchFor:searchString">
-          <a href="{{i.url}}"><img ng-src="{{i.image}}" /></a>
-          <p>{{i.title}}</p>
-        </li>
-      </ul>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-    <script src="script.js"></script>
+    <div ng-view></div>
     <script>
-      var app = angular.module('Project', []);
-      app.controller('navBar', function ($scope) {
-        $scope.hide = true;
-        $scope.search = false;
-        $scope.active = function (item) {
-          if (param == 'search') {
-            $scope.search = true;
-            $scope.hide = false;
+      var app = angular.module('myApp', []);
+      var app = angular.module('myApp', ['ngRoute']);
+      app.config(function ($routeProvider) {
+        $routeProvider
+
+          .when('/', {
+            templateUrl: 'first.html',
+            controller: 'FirstController',
+          })
+
+          .when('/second', {
+            templateUrl: 'second.html',
+            controller: 'SecondController',
+          })
+
+          .when('/third', {
+            templateUrl: 'third.html',
+            controller: 'ThirdController',
+          })
+
+          .when('/fourth', {
+            templateUrl: 'fourth.html',
+            controller: 'FourthController',
+          })
+
+          .otherwise({ redirectTo: '/' });
+      });
+      /*
+            app.controller('FirstController', function($scope) {
+            $scope.message = 'Hello from FirstController';
+            });
+  
+            app.controller('SecondController', function($scope) {
+            $scope.message = 'Hello from SecondController';
+            });
+  
+            app.controller('ThirdController', function($scope) {
+            $scope.message = 'Hello from ThirdController';
+            });
+
+            app.controller('FourthController', function($scope) {
+            $scope.message = 'Hello from FourthController';
+            });  */
+
+      app.filter('searchFor', function () {
+        return function (arr, searchString) {
+          if (!searchString) {
+            return arr;
           }
+
+          var result = [];
+
+          searchString = searchString.toLowerCase();
+
+          angular.forEach(arr, function (item) {
+            if (item.title.toLowerCase().indexOf(searchString) !== -1) {
+              result.push(item);
+            }
+          });
+
+          return result;
         };
       });
+
+      // The controller
+
+      function InstantSearchController($scope) {
+        // The data model. These items would normally be requested via AJAX,
+        // but are hardcoded here for simplicity. See the next example for
+        // tips on using AJAX.
+
+        $scope.items = [
+          {
+            url: '',
+            title: '50 Must-have plugins for extending Twitter Bootstrap',
+            image:
+              'http://cdn.tutorialzine.com/wp-content/uploads/2013/07/featured_4-100x100.jpg',
+          },
+          {
+            url: 'http://tutorialzine.com/2013/08/simple-registration-system-php-mysql/',
+            title:
+              'Making a Super Simple Registration System With PHP and MySQL',
+            image:
+              'http://cdn.tutorialzine.com/wp-content/uploads/2013/08/simple_registration_system-100x100.jpg',
+          },
+          {
+            url: 'http://tutorialzine.com/2013/08/slideout-footer-css/',
+            title: 'Create a slide-out footer with this neat z-index trick',
+            image:
+              'http://cdn.tutorialzine.com/wp-content/uploads/2013/08/slide-out-footer-100x100.jpg',
+          },
+          {
+            url: 'http://tutorialzine.com/2013/06/digital-clock/',
+            title: 'How to Make a Digital Clock with jQuery and CSS3',
+            image:
+              'http://cdn.tutorialzine.com/wp-content/uploads/2013/06/digital_clock-100x100.jpg',
+          },
+          {
+            url: 'http://tutorialzine.com/2013/05/diagonal-fade-gallery/',
+            title: 'Smooth Diagonal Fade Gallery with CSS3 Transitions',
+            image:
+              'http://cdn.tutorialzine.com/wp-content/uploads/2013/05/featured-100x100.jpg',
+          },
+          {
+            url: 'http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/',
+            title: 'Mini AJAX File Upload Form',
+            image:
+              'http://cdn.tutorialzine.com/wp-content/uploads/2013/05/ajax-file-upload-form-100x100.jpg',
+          },
+          {
+            url: 'http://tutorialzine.com/2013/04/services-chooser-backbone-js/',
+            title: 'Your First Backbone.js App – Service Chooser',
+            image:
+              'http://cdn.tutorialzine.com/wp-content/uploads/2013/04/service_chooser_form-100x100.jpg',
+          },
+        ];
+      }
     </script>
+    <script src="script.js"></script>
   </body>
 </html>
